@@ -362,8 +362,12 @@
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
         setActive(e.target.id);
-        const tab = document.querySelector(`.tabs [data-file="${e.target.id}"]`);
-        if (tab) tab.scrollIntoView({ block: "nearest", inline: "nearest" });
+        // Scroll only the tab strip sideways; scrollIntoView would also drag the page back up
+        const tabs = document.querySelector(".tabs");
+        const tab = tabs.querySelector(`[data-file="${e.target.id}"]`);
+        if (tab && tabs.scrollWidth > tabs.clientWidth) {
+          tabs.scrollTo({ left: tab.offsetLeft - (tabs.clientWidth - tab.offsetWidth) / 2, behavior: "smooth" });
+        }
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
     document.querySelectorAll("main section").forEach((s) => io.observe(s));
